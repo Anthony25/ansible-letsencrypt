@@ -1,6 +1,7 @@
 ---
   - name: Ensure webroot exists
-    file: path="{{ letsencrypt_webroot_path }}" state=directory recurse=yes mode="a+rw"
+    file: path="{{ letsencrypt_webroot_path }}" state=directory follow=yes
+    become: yes
 
   - name: Attempt to get the certificate using the webroot authenticator
     command: "{{ letsencrypt_command }} --webroot -w {{ letsencrypt_webroot_path }} certonly {% for domain in item %}-d {{ domain }} {% endfor %}"
@@ -18,6 +19,7 @@
 
   - name: Fix the renewal file
     ini_file: section=renewalparams option={{ item.key }} value={{ item.value }} dest="/etc/letsencrypt/renewal/{{ letsencrypt_cert_domains[0] }}.conf"
+    become: yes
     with_dict:
       os_packages_only: False
       verb: certonly
@@ -28,4 +30,5 @@
 
   - name: Fix the webroot map in the renewal file
     ini_file: section="[webroot_map]" option={{ item }} value={{ letsencrypt_webroot_path }} dest="/etc/letsencrypt/renewal/{{ letsencrypt_cert_domains[0] }}.conf"
+    become: yes
     with_items: "{{ letsencrypt_cert_domains }}"

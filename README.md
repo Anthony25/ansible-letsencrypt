@@ -8,6 +8,8 @@ the web server has been configured or even installed.
 I've tested this on a couple of Debian Jessie boxes with nginx, if you test it on other things please let me know
 the results (positive or otherwise) so I can document them here/fix the issue.
 
+Requires Ansible >= 2.0
+
 # Usage
 First, read Let's Encrypt's TOS and EULA. Only proceed if you agree to them.
 
@@ -25,6 +27,10 @@ The following variables are available:
 
 `letsencrypt_server` sets the auth server. Set to `https://acme-staging.api.letsencrypt.org/directory` to use the staging server (far higher rate limits, but certs are not trusted, intended for testing)
 
+`letsencrypt_renewal_command_args` add arguments to the `letsencrypt renewal` command that gets run using cron.  For example, use the renewal hooks to restart a web server.
+
+`letsencrypt_standalone_command_args` adds arguments to the standalone authentication method. This is mostly useful for specifying supported challenges, such as `--standalone-supported-challenges tls-sni-01` to limit the authentication to port 443 if something is already running on 80 or vice versa.
+
 The [Let's Encrypt client](https://github.com/letsencrypt/letsencrypt) will put the certificate and accessories in `/etc/letsencrypt/live/<first listed domain>/`. For more info, see the [Let's Encrypt documentation](https://letsencrypt.readthedocs.org/en/latest/using.html#where-are-my-certificates).
 
 # Example Playbook
@@ -39,4 +45,5 @@ The [Let's Encrypt client](https://github.com/letsencrypt/letsencrypt) will put 
        letsencrypt_cert_domains:
         - www.example.net
         - example.net
+       letsencrypt_renewal_command_args: '--renew-hook "systemctl restart nginx"'
 ```
