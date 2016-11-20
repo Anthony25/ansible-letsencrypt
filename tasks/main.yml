@@ -16,15 +16,3 @@
     args:
       creates: "/etc/letsencrypt/live/{{ item[0] }}"
     with_items: "{{ letsencrypt_cert_domains }}"
-
-  - name: Fix the renewal file
-    ini_file: section=renewalparams option={{ item.key }} value={{ item.value }} dest="/etc/letsencrypt/renewal/{{ letsencrypt_cert_domains[0][0][0] }}.conf"
-    become: yes
-    with_nested:
-      - os_packages_only: False
-        verb: certonly
-        noninteractive_mode: False
-        uir: False
-        hsts: False
-        authenticator: '{{ letsencrypt_authenticator }}'
-      - "{{ letsencrypt_cert_domains }}"
