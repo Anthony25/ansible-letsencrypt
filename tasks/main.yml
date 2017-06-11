@@ -1,6 +1,9 @@
 ---
   - name: Ensure webroot exists
-    file: path="{{ letsencrypt_webroot_path }}" state=directory follow=yes
+    file:
+      path: "{{ letsencrypt_webroot_path }}"
+      state: directory
+      follow: yes
     become: yes
 
   - name: Attempt to get the certificate using the webroot authenticator

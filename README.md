@@ -25,11 +25,11 @@ The following variables are available:
 
 `letsencrypt_install_directory` should probably be left alone, but if you set it, it will change where the letsencrypt program is installed.
 
-`letsencrypt_server` sets the auth server. Set to `https://acme-staging.api.letsencrypt.org/directory` to use the staging server (far higher rate limits, but certs are not trusted, intended for testing)
-
 `letsencrypt_renewal_command_args` add arguments to the `letsencrypt renewal` command that gets run using cron.  For example, use the renewal hooks to restart a web server.
 
 `letsencrypt_standalone_command_args` adds arguments to the standalone authentication method. This is mostly useful for specifying supported challenges, such as `--standalone-supported-challenges tls-sni-01` to limit the authentication to port 443 if something is already running on 80 or vice versa.
+
+`letsencrypt_server` sets the alternative auth server if needed. For example, during tests it's set to `https://acme-staging.api.letsencrypt.org/directory` to use the staging server (far higher rate limits, but certs are not trusted). It is not set by default.
 
 The [Let's Encrypt client](https://github.com/letsencrypt/letsencrypt) will put the certificate and accessories in `/etc/letsencrypt/live/<first listed domain>/`. For more info, see the [Let's Encrypt documentation](https://letsencrypt.readthedocs.org/en/latest/using.html#where-are-my-certificates).
 
